@@ -1,0 +1,31 @@
+# Операционные системы
+.DS_Store
+Thumbs.db
+MacOs
+
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+build/
+*.whl
+
+# Виртуальные окружения
+venv/
+env/
+ENV/
+.venv/
+
+# Файлы конфигурации IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Данные конфиденциальности
+*.env
