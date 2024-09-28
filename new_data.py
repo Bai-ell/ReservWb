@@ -1,16 +1,16 @@
 import asyncio
 from datetime import datetime
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 import aiohttp
 from config_reader import config
-from database.db import async_session, Warehouse, UserRequest
-from notification_service import send_notification, check_user_requests  # Импортируйте функции из notification_service
+from database.db import async_session, Warehouse
+from notification_service import  check_user_requests 
+import logging
 
 
 
 
-
+logging.disable(logging.CRITICAL)
 
 headers = {'Authorization': f'Bearer {config.api_key.get_secret_value()}'}
 coefficients_url = config.coefficent_url.get_secret_value()
@@ -66,18 +66,18 @@ async def update_coefficients_in_db():
 
 async def periodic_task(interval):
     while True:
-        # Сначала обновляем базу данных
+        
         await update_coefficients_in_db()
 
         async with async_session() as db_session:
-            # Затем проверяем запросы пользователей
-            await check_user_requests(db_session)  # Передаем db_session
+           
+            await check_user_requests(db_session)  
 
-        # Повторяем задачу через указанный интервал
+        
         await asyncio.sleep(interval)
 
-async def main():
-    await periodic_task(30)  # Запускаем задачу с интервалом 30 секунд
+async def pars():
+    await periodic_task(60)  
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(pars())

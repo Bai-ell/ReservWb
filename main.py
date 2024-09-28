@@ -4,7 +4,9 @@ import logging
 from bot_instance import bot 
 from middlewares.antiflood import AntiFloodMiddleware
 from middlewares.badwordshandler import MultiLangBadWordsMiddleware
-from handlers import user_commands, bot_message, callback_handlers, questionnaire
+from handlers import user_commands, callback_handlers, questionnaire
+from new_data import pars
+
 
 
 
@@ -14,19 +16,19 @@ from handlers import user_commands, bot_message, callback_handlers, questionnair
 async def main() -> None:
     dp = Dispatcher()
 
-    # example middlewares 
+ 
     dp.message.middleware(MultiLangBadWordsMiddleware(file_paths=["badwordsru.json"]))
     dp.message.middleware(AntiFloodMiddleware(0.5))
+    asyncio.create_task(pars())
 
-    # example files router
     dp.include_routers(
         user_commands.router,
         questionnaire.router,
         callback_handlers.router,
-        # bot_messages.router
+       
     )
 
-    # example webhook settings
+  
     await bot.delete_webhook(drop_pending_updates=True)
     
     await dp.start_polling(bot)

@@ -1,9 +1,9 @@
-from sqlalchemy import Column, Integer, String, Date, BigInteger, DateTime
+from sqlalchemy import Column, Integer, String, BigInteger, DateTime, Boolean
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from config_reader import config
-from datetime import datetime
+
 
 
 
@@ -43,3 +43,4 @@ class UserRequest(Base):
     need_coefficient = Column(Integer)  
     need_date = Column(DateTime)  
     box_type_name = Column(String)  
+    notified = Column(Boolean, default=False)
