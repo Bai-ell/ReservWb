@@ -19,7 +19,7 @@ async def main() -> None:
  
     dp.message.middleware(MultiLangBadWordsMiddleware(file_paths=["badwordsru.json"]))
     dp.message.middleware(AntiFloodMiddleware(0.5))
-    asyncio.create_task(pars())
+    # asyncio.create_task(pars())
 
     dp.include_routers(
         user_commands.router,
@@ -39,3 +39,4 @@ if __name__ == '__main__':
         asyncio.run(main())
     except KeyboardInterrupt:
         print('Exiting')
+

@@ -5,7 +5,7 @@ import json
 
 
 
-#example Multi languages badwords handler if you add file in main.py string 19
+
 class MultiLangBadWordsMiddleware(BaseMiddleware):
     def __init__(self, file_paths: List[str]) -> None:
         self.bad_words = []

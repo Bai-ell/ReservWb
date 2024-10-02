@@ -10,7 +10,7 @@ import logging
 
 
 
-logging.disable(logging.CRITICAL)
+# logging.disable(logging.CRITICAL)
 
 headers = {'Authorization': f'Bearer {config.api_key.get_secret_value()}'}
 coefficients_url = config.coefficent_url.get_secret_value()

@@ -41,6 +41,7 @@ class UserRequest(Base):
     user_name = Column(String)  
     need_warehouse_name = Column(String)  
     need_coefficient = Column(Integer)  
-    need_date = Column(DateTime)  
+    start_date = Column(DateTime)  # Начальная дата
+    end_date = Column(DateTime)    # Конечная дата
     box_type_name = Column(String)  
     notified = Column(Boolean, default=False)

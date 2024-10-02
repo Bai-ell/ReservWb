@@ -16,8 +16,8 @@ async def check_user_requests(db_session: AsyncSession):
         warehouses = await db_session.execute(
             select(Warehouse).where(
                 Warehouse.warehouse_name == user_request.need_warehouse_name,
-                Warehouse.coefficient >= user_request.need_coefficient,
-                Warehouse.date <= user_request.need_date
+                Warehouse.coefficient <= user_request.need_coefficient,
+                Warehouse.date == user_request.need_date
             )
         )
         warehouses = warehouses.scalars().all()
@@ -37,7 +37,7 @@ async def check_user_requests(db_session: AsyncSession):
 
 
 async def send_notification(tg_id: int, warehouses):
-    warehouse_list = "\n".join([f"Склад: {w.warehouse_name}, Коэффициент: {w.coefficient}, Дата: {w.date}" for w in warehouses])
+    warehouse_list = "\n".join([f"Склад: {w.warehouse_name}, Коэффициент: {w.coefficient}, Дата: {w.date}, " for w in warehouses])
     message = f"Найдены склады:\n{warehouse_list}"
     await bot.send_message(chat_id=tg_id, text=message)
 
