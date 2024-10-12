@@ -18,7 +18,7 @@ async_session = sessionmaker(
 
 
 
-class Warehouse(Base):
+class Warehouses(Base):
     __tablename__ = 'warehouses'
 
     id = Column(Integer, primary_key=True)
@@ -45,3 +45,10 @@ class UserRequest(Base):
     end_date = Column(DateTime)    # Конечная дата
     box_type_name = Column(String)  
     notified = Column(Boolean, default=False)
+
+
+class WarehousesNames(Base):
+    __tablename__ = 'warehouses_names'
+    id = Column(Integer, primary_key=True, index=True)
+    warehouse_name = Column(String, unique=True, nullable=False)
+    created_at = Column(DateTime, nullable=False)

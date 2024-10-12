@@ -1,7 +1,6 @@
-from database.db import async_session, UserRequest
-from datetime import datetime
-import json
-
+from database.db import async_session, UserRequest, WarehousesNames 
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 
 
 
@@ -22,17 +21,8 @@ async def save_user_request(tg_id, user_name, need_warehouse_name, need_coeffici
 
 
 
-async def load_warehouses_from_json(file_path='coefficients.json'):
-    with open(file_path, 'r', encoding='utf-8') as f:
-        data = json.load(f)
-
-    # Извлекаем названия складов из списка
-    warehouses = []
-    for warehouse in data:
-        if 'warehouseName' in warehouse:
-            warehouses.append({
-                'id': len(warehouses) + 1,  # Добавляем ID на основе порядкового номера
-                'name': warehouse['warehouseName']
-            })
-
-    return warehouses
+async def load_warehouses_from_db(db_session: AsyncSession):
+    async with db_session.begin():  
+        result = await db_session.execute(select(WarehousesNames))
+        warehouses = result.scalars().all()  
+    return [{'id': warehouse.id, 'name': warehouse.warehouse_name} for warehouse in warehouses]

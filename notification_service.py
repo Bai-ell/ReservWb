@@ -1,10 +1,10 @@
 import asyncio
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from database.db import UserRequest, Warehouse 
+from sqlalchemy import asc 
+from database.db import UserRequest, Warehouses 
 from bot_instance import bot 
-
-
+from keyboards.inline import main
 
 
 async def check_user_requests(db_session: AsyncSession):
@@ -12,43 +12,45 @@ async def check_user_requests(db_session: AsyncSession):
     user_requests = user_requests.scalars().all()
 
     for user_request in user_requests:
-        
+        start_date = user_request.start_date.strftime('%Y-%m-%d %H:%M:%S')  
+        end_date = user_request.end_date.strftime('%Y-%m-%d %H:%M:%S')  
         warehouses = await db_session.execute(
-            select(Warehouse).where(
-                Warehouse.warehouse_name == user_request.need_warehouse_name,
-                Warehouse.coefficient <= user_request.need_coefficient,
-                Warehouse.date == user_request.need_date
+            select(Warehouses)
+            .where(
+                Warehouses.warehouse_name == user_request.need_warehouse_name,
+                Warehouses.coefficient <= user_request.need_coefficient,
+                Warehouses.coefficient >= 0, 
+                Warehouses.date.between(start_date, end_date),
+                Warehouses.box_type_name == user_request.box_type_name
             )
+            .order_by(asc(Warehouses.date))
+            .limit(1)
         )
-        warehouses = warehouses.scalars().all()
+        warehouse = warehouses.scalars().first()
 
-        if warehouses:
-            await send_notification(user_request.tg_id, warehouses)
+        if warehouse:
+            await send_notification(tg_id=user_request.tg_id, warehouse=warehouse)
 
-            
             user_request.notified = True
             db_session.add(user_request)  
 
-   
     await db_session.commit()
 
 
-
-
-
-async def send_notification(tg_id: int, warehouses):
-    warehouse_list = "\n".join([f"Склад: {w.warehouse_name}, Коэффициент: {w.coefficient}, Дата: {w.date}, " for w in warehouses])
-    message = f"Найдены склады:\n{warehouse_list}"
-    await bot.send_message(chat_id=tg_id, text=message)
-
-
+async def send_notification(tg_id: int, warehouse):
+    message = (
+        f"Найден склад на {warehouse.date}"
+        f"\nСклад: {warehouse.warehouse_name}" 
+        f"\nКоэффициент: {warehouse.coefficient}"
+        f"\nТип поставки: {warehouse.box_type_name}"
+    )
+    await bot.send_message(chat_id=tg_id, text=message, reply_markup=await main())
 
 
 async def periodic_check(db_session: AsyncSession):
     while True:
         await check_user_requests(db_session)
-        await asyncio.sleep(60) 
-
+        await asyncio.sleep(60)  
 
 
 def start_periodic_check(db_session: AsyncSession):

@@ -1,4 +1,3 @@
-# bot_instance.py
 from aiogram import Bot
 from config_reader import config
 

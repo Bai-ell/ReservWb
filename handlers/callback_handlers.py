@@ -3,8 +3,6 @@ from aiogram.types import CallbackQuery
 from aiogram import F
 from keyboards.inline import main
 from idhandlers.idclass import MyCallbackData 
-from aiogram_calendar import SimpleCalendar
-from aiogram_calendar import SimpleCalendarCallback
 
 
 

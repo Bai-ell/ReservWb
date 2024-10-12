@@ -8,5 +8,4 @@ router = Router()
 
 @router.message(CommandStart())
 async def start(message: types.Message):  
-    await message.answer("Добро пожаловать! ", reply_markup= await main())
-  
+    await message.answer("*Добро пожаловать!*", parse_mode='Markdown', reply_markup= await main())

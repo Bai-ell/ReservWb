@@ -5,7 +5,7 @@ from bot_instance import bot
 from middlewares.antiflood import AntiFloodMiddleware
 from middlewares.badwordshandler import MultiLangBadWordsMiddleware
 from handlers import user_commands, callback_handlers, questionnaire
-from new_data import pars
+from data_pars import pars
 
 
 
@@ -19,7 +19,7 @@ async def main() -> None:
  
     dp.message.middleware(MultiLangBadWordsMiddleware(file_paths=["badwordsru.json"]))
     dp.message.middleware(AntiFloodMiddleware(0.5))
-    # asyncio.create_task(pars())
+    asyncio.create_task(pars())
 
     dp.include_routers(
         user_commands.router,
