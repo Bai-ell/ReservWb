@@ -115,7 +115,7 @@ async def process_start_date(callback: CallbackQuery, callback_data: SimpleCalen
     selected_date = datetime.strptime(f"{callback_data.year}-{callback_data.month}-{callback_data.day}", "%Y-%m-%d")
     await state.update_data(start_date=selected_date)
     await callback.message.edit_text(
-        text=f"Начальная дата: {selected_date.strftime('%Y-%m-%d')}\n\nПожалуйста, выберите конечную дату:", 
+        text=f"Начальная дата: {selected_date.strftime('%Y-%m-%d')}\n\nПожалуйста, выберите конечную дату диопазона:", 
         reply_markup=await SimpleCalendar().start_calendar()
         )
     await state.set_state(UserForm.end_date) 
