@@ -9,10 +9,6 @@ from data_pars import pars
 
 
 
-
-
-
-
 async def main() -> None:
     dp = Dispatcher()
 
